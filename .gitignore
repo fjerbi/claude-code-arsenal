@@ -1,0 +1,27 @@
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Claude Code working state
+progress.md
+
+# Node (if scripts use npm)
+node_modules/
+
+# Logs
+*.log
+
+# Temporary / scratch
+scratch/
+tmp/

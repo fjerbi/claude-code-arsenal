@@ -1,15 +1,27 @@
 # Review Architecture
 
-Goal: detect unnecessary complexity and risky design growth.
+Goal: detect unnecessary complexity and risky design.
 
-Steps:
-1. Inspect whether the change is proportional to the task.
-2. Check for new abstraction layers or speculative complexity.
-3. Confirm the code matches the existing architecture and conventions.
-4. Identify if the solution is simple, local, and maintainable.
-5. Recommend the smallest simpler alternative if needed.
+## Trigger
 
-Guardrails:
+Run WHEN a change introduces new abstractions, patterns, or structural changes.
+
+## Protocol
+
+1. Is the change proportional to the task?
+2. Are new abstraction layers justified by concrete need?
+3. Does the code match existing architecture and conventions?
+4. Is the solution simple, local, and maintainable?
+5. Could a simpler alternative achieve the same result?
+
+## Decision Rules
+
+- WHEN abstraction is justified → ACCEPT with note.
+- WHEN simpler alternative exists → REVISE: recommend simpler approach.
+- WHEN unnecessary complexity detected → BLOCK: explain why.
+
+## Guardrails
+
 - Prefer simple, direct designs over abstract frameworks.
-- Do not approve unnecessary complexity.
+- NEVER approve unnecessary complexity.
 - Favor maintainability and clarity over cleverness.

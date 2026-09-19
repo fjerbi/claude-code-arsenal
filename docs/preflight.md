@@ -1,40 +1,69 @@
 # Preflight Checklist
 
-Run this before starting or delegating work.
+Run before starting or delegating work.
 
-## 1. Objective check
-- The task is stated in one sentence.
-- The expected outcome is clear.
-- The acceptance criteria are explicit enough to validate.
+## 1. Objective Check
 
-## 2. Scope check
-- The work is bounded to the relevant files or subsystem.
-- The task is not broadening into unrelated cleanup.
-- The patch will not touch unrelated user work.
+- [ ] Task stated in one sentence.
+- [ ] Expected outcome is clear.
+- [ ] Acceptance criteria are explicit enough to validate.
 
-## 3. Evidence check
-- Relevant repo evidence was inspected.
-- Root cause or requirement was identified before patching.
-- Unknowns were stated instead of assumed.
+## 2. Complexity Classification
 
-## 4. Safety check
-- Existing user changes are protected.
-- No destructive or forceful commands are needed.
-- Dependencies and side effects are understood.
+- [ ] Classified as TRIVIAL / NORMAL / COMPLEX / CRITICAL (AGENTS.md §1).
+- [ ] Reasoning depth matches complexity (AGENTS.md §2).
 
-## 5. Agent routing check
-- The primary role matches the job: planner, researcher, fixer, validator, reviewer, or orchestrator.
-- The work is not over-distributed across too many agents.
-- Parallel work is safe and independent.
+## 3. Scope Check
 
-## 6. Validation check
-- The smallest relevant proof is identified.
-- The proof is scoped to the changed behavior.
-- The expected result is observable and measurable.
+- [ ] Work bounded to relevant files or subsystem.
+- [ ] Not broadening into unrelated cleanup.
+- [ ] Will not touch unrelated user work.
 
-## 7. Stop condition check
-- The task has a defined end state.
-- A completion decision can be made from evidence.
-- The work can stop once validation confirms the outcome.
+## 4. Risk Classification
 
-If any item is missing, pause and resolve it before continuing.
+- [ ] Blast radius classified: LOCAL / MODULE / SYSTEM (AGENTS.md §7).
+- [ ] Verification depth matches risk level (AGENTS.md §12).
+
+## 5. Impact Analysis (for COMPLEX+ tasks)
+
+- [ ] Identified all files that will change.
+- [ ] Mapped dependencies (what calls/imports the changed code).
+- [ ] Assessed downstream consumers.
+- [ ] Identified potential breaking changes.
+
+## 6. Evidence Check
+
+- [ ] Relevant repo evidence inspected.
+- [ ] Root cause or requirement identified before patching.
+- [ ] Unknowns stated, not assumed.
+
+## 7. Safety Check
+
+- [ ] Existing user changes protected (git status checked).
+- [ ] No destructive commands needed.
+- [ ] Dependencies and side effects understood.
+
+## 8. Agent Routing Check
+
+- [ ] Primary role matches the job.
+- [ ] Work not over-distributed.
+- [ ] Parallel work is safe and independent.
+
+## 9. Validation Check
+
+- [ ] Smallest relevant verification identified.
+- [ ] Expected result is observable.
+- [ ] Verification command known.
+
+## 10. Stop Condition Check
+
+- [ ] Task has a defined end state.
+- [ ] Completion can be determined from evidence.
+
+IF any item is missing → pause and resolve before continuing.
+
+## Rollback Plan (for COMPLEX+ tasks)
+
+- [ ] Identified rollback points.
+- [ ] Know how to revert if verification fails.
+- [ ] User work preservation confirmed.

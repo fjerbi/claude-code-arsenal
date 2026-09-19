@@ -1,36 +1,58 @@
 # Project Conventions
 
-## General principles
-- Prefer the smallest correct change.
-- Search before patching.
-- Validate with the smallest relevant command.
-- Do not broaden scope without explicit need.
-- Preserve existing user work.
-- Prefer a narrow, evidence-backed plan over broad exploration.
+## Code Style
 
-## Multi-agent operating expectations
-- Use the orchestrator when a task spans multiple phases or specialist roles.
-- Keep each agent scoped to a single responsibility boundary.
-- Parallelize only when the workstreams are genuinely independent.
-- Never allow parallel branches to mutate the same files without explicit coordination.
-- Preserve context across handoffs and document assumptions.
+- Follow existing project conventions. Match indentation, naming, and formatting.
+- Do not enforce personal preferences over project standards.
+- WHEN uncertain about style → inspect 2-3 similar files for the pattern.
 
-## Coding expectations
-- Keep changes readable and local.
-- Match existing project naming and structure.
-- Prefer reusing existing utilities over introducing new abstractions.
-- Do not add dependencies unless necessary.
-- Keep agent tasks executable without hidden operational assumptions.
+## Change Safety
 
-## Change safety
 - No unrelated refactors.
 - No speculative error handling.
 - No hidden behavior changes.
 - No destructive commands without explicit confirmation.
 - No silent merge of parallel branches without validation evidence.
 
+## Multi-Agent Rules
+
+- Keep each agent scoped to a single responsibility.
+- Parallelize only genuinely independent workstreams.
+- NEVER allow parallel branches to mutate the same files without coordination.
+- Preserve context across handoffs and document assumptions.
+
+## Naming
+
+- Use descriptive, consistent names matching project conventions.
+- Avoid abbreviations unless project-standard.
+
+## Error Handling
+
+- Follow existing error handling patterns.
+- Do not add speculative error handling.
+- Handle errors at the appropriate level.
+
+## Testing
+
+- Follow existing test patterns, framework, and locations.
+- Apply TDD when fixing bugs or adding features (AGENTS.md §6).
+- NEVER delete or relax existing tests to make a suite pass.
+
+## Dependencies
+
+- NEVER add dependencies without concrete need.
+- Check existing dependencies and standard library first.
+
 ## Verification
-- Run a focused check after the change.
-- Validate each independent workstream before claiming the combined result is ready.
+
+- Run focused verification after every change.
+- Validate each workstream independently before merging.
 - Report actual evidence, not assumptions.
-- Stop once the behavior is validated.
+- Stop once behavior is validated.
+
+## Commits
+
+- Use conventional commit format when the project uses it.
+- Keep messages concise and descriptive.
+- Reference issue numbers when applicable.
+- NEVER commit without verification passing.

@@ -2,14 +2,32 @@
 
 Goal: produce a minimal, dependency-aware execution plan.
 
-Steps:
-1. Summarize the objective and acceptance criteria.
-2. Break the task into the smallest meaningful steps.
-3. Order steps by dependency and risk.
-4. Note the likely verification checkpoints.
-5. Keep the plan narrow and executable.
+## Trigger
 
-Guardrails:
-- Do not create architecture-level plans for local fixes.
-- Do not include speculative tasks.
-- Prefer a short plan over a large one.
+Run WHEN complexity ≥ COMPLEX or when multiple steps are needed.
+
+## Protocol
+
+1. Summarize objective and acceptance criteria.
+2. Break task into smallest meaningful steps.
+3. Order steps by dependency.
+4. Identify parallelizable branches.
+5. Define verification checkpoint for each step.
+6. Note risks and assumptions.
+
+## Output
+
+```
+Objective: [one sentence]
+Steps:
+  1. [step] → verify: [check]
+  2. [step] → verify: [check]
+Parallel: [branches if any]
+Risks: [list]
+```
+
+## Guardrails
+
+- NEVER create architecture-level plans for local fixes.
+- NEVER include speculative tasks.
+- Prefer short plans over comprehensive ones.

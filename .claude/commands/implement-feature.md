@@ -1,17 +1,32 @@
 # Implement Feature
 
-Goal: add the requested feature with minimal, correct scope.
+Goal: add requested functionality with minimal, correct scope.
 
-Steps:
-1. Clarify the required behavior and acceptance criteria.
-2. Locate the relevant module and existing patterns.
-3. Implement the smallest change that satisfies the behavior.
-4. Update or add tests for the changed behavior.
-5. Run the relevant validation command.
-6. Stop when the feature works and the check passes.
+## Trigger
 
-Guardrails:
+Run WHEN the task is a new feature or enhancement.
+
+## Protocol
+
+1. Clarify behavior and acceptance criteria.
+2. Locate relevant module and existing patterns.
+3. Assess blast radius (AGENTS.md §7).
+4. Apply TDD when project supports it (AGENTS.md §6):
+   - Write test for expected behavior.
+   - Implement minimum code to pass.
+   - Refactor without breaking tests.
+5. Run verification scaled to risk level (AGENTS.md §12).
+6. Report with actual output.
+
+## Evidence Required
+
+- Feature behaves as specified.
+- Tests pass with actual output.
+- No regressions.
+
+## Guardrails
+
 - Prefer existing patterns and utilities.
-- Avoid speculative architecture changes.
-- Keep changes bounded to the feature.
-- Do not fabricate missing APIs or behavior.
+- NEVER add speculative architecture.
+- NEVER expand scope beyond the feature.
+- NEVER fabricate APIs or dependencies.

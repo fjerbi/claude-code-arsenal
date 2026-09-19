@@ -1,21 +1,31 @@
 # Quality Gate
 
-Goal: decide whether the task is ready to stop.
+Goal: determine whether a task is ready to stop.
 
-Required checks before completion:
-- the user request was understood
-- scope stayed bounded
-- the patch matches the request
-- validation was run and evidence recorded
-- no remaining direct blocker is unresolved
-- no unrelated user work was touched
+## Trigger
 
-Decision:
-- pass only when the evidence supports completion
-- fail when the result is uncertain or unverified
-- return to the root-cause loop if validation fails
+Run BEFORE declaring any task complete.
 
-Guardrails:
-- do not stop early because a patch looks plausible
-- do not override evidence with optimism
-- do not treat assumptions as proof
+## Protocol
+
+- [ ] The user request was understood and solved.
+- [ ] Scope stayed bounded — no unrelated changes.
+- [ ] The patch matches the request.
+- [ ] Verification was run and evidence recorded.
+- [ ] No unrelated user work was modified.
+- [ ] No remaining direct blocker is unresolved.
+- [ ] Significant decisions were documented.
+- [ ] System invariants still hold.
+
+## Decision
+
+- ALL checks pass → **STOP. Task complete.**
+- Any check fails → address the failure before stopping.
+- Verification missing → run verification first.
+- Evidence unclear → re-run with explicit output.
+
+## Guardrails
+
+- NEVER stop because a patch looks plausible.
+- NEVER override evidence with optimism.
+- NEVER treat assumptions as proof.

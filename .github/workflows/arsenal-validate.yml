@@ -1,0 +1,55 @@
+name: Arsenal Validate
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate Arsenal Integrity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Arsenal installation
+        run: bash scripts/validate.sh .
+
+      - name: Check markdown links
+        run: |
+          ERRORS=0
+
+          # Check that internal markdown links point to existing files
+          while IFS= read -r file; do
+            # Extract markdown links like [text](path) — skip URLs and anchors
+            grep -oP '\[.*?\]\((?!https?://|#|mailto:)(.*?)\)' "$file" 2>/dev/null | \
+            grep -oP '\((?!https?://|#|mailto:)(.*?)\)' | \
+            tr -d '()' | \
+            while IFS= read -r link; do
+              # Strip anchor fragments
+              link_path="${link%%#*}"
+              if [[ -n "$link_path" && ! -f "$link_path" && ! -d "$link_path" ]]; then
+                echo "::warning file=$file::Broken link: $link_path"
+                ERRORS=$((ERRORS + 1))
+              fi
+            done
+          done < <(find . -name '*.md' -not -path './.git/*')
+
+          if [[ $ERRORS -gt 0 ]]; then
+            echo "::warning::Found $ERRORS broken markdown link(s)"
+          fi
+
+      - name: Verify shell scripts are valid
+        run: |
+          for script in scripts/*.sh .claude/hooks/*.sh; do
+            if [[ -f "$script" ]]; then
+              bash -n "$script" && echo "✓ $script" || { echo "✗ $script"; exit 1; }
+            fi
+          done
+
+      - name: Verify settings.json is valid JSON
+        run: python3 -c "import json; json.load(open('.claude/settings.json'))" && echo "✓ settings.json is valid JSON"
