@@ -1,0 +1,35 @@
+{
+  "model": "sonnet",
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Read",
+      "Write",
+      "Edit",
+      "MultiEdit",
+      "Glob",
+      "Grep",
+      "Task"
+    ],
+    "deny": [
+      "Bash:rm -rf /",
+      "Bash:sudo",
+      "Bash:curl * | bash *",
+      "Bash:curl * | sh *",
+      "Bash:chmod 777 /",
+      "Bash:git push --force",
+      "Bash:git reset --hard HEAD",
+      "Bash:git clean -fd",
+      "Bash:git checkout -- .",
+      "Bash:find / -delete",
+      "Bash:mkfs.*"
+    ]
+  },
+  "env": {
+    "CLAUDE_CODE_DISABLE_TELEMETRY": "1",
+    "CI": "1"
+  },
+  "includeCoAuthoredBy": false,
+  "preferredEditor": "vscode",
+  "autoApprove": false
+}

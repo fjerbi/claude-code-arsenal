@@ -26,6 +26,19 @@
 
 > A disciplined operating system for Claude Code — built to maximize engineering efficiency, minimize wasted tokens, prevent hallucinations and endless loops, and keep AI-assisted development focused on the actual task.
 
+## What is included
+
+This repo is a lean, stronger Claude operating system designed for reliability rather than noise.
+
+- core repo instructions: [CLAUDE.md](CLAUDE.md)
+- operating rules: [AGENTS.md](AGENTS.md)
+- repository constitution: [.claude/constitution.md](.claude/constitution.md)
+- project settings: [.claude/settings.json](.claude/settings.json)
+- command library: [.claude/commands](.claude/commands)
+- specialized agents: [.claude/agents](.claude/agents)
+- safety checks: [.claude/hooks](.claude/hooks)
+- conventions and workflow: [docs/conventions.md](docs/conventions.md), [docs/workflow.md](docs/workflow.md), [docs/checklists.md](docs/checklists.md)
+
 ## What Is This?
 
 Claude Code Arsenal is a collection of instructions, workflows, conventions, and tools designed to make Claude Code work like a disciplined senior software engineer.
@@ -217,6 +230,39 @@ Example:
 The permanent instructions handle the engineering discipline.
 
 The task prompt only needs to describe the actual work.
+
+## Core command set
+
+This repo intentionally keeps the workflow tight and reliable:
+
+- triage-task
+- plan-task
+- fix-bug
+- validate-change
+- review-diff
+- quality-gate
+
+## Core agent model
+
+The repo emphasizes a small, disciplined agent structure:
+
+- planner
+- reviewer
+- validator
+- fixer
+
+This keeps the workflow evidence-driven and limits drift into speculation.
+
+## Safety and anti-hallucination rules
+
+This repo intentionally emphasizes:
+
+- no invented APIs or behavior
+- no fake test results
+- no speculative refactors
+- no silent scope expansion
+- no completion claim without fresh verification evidence
+- prefer minimal scope and explicit validation
 
 ---
 
