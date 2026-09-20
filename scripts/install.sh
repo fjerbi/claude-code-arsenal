@@ -11,7 +11,44 @@
 
 set -euo pipefail
 
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly ARSENAL_REPO_URL="https://github.com/fjerbi/claude-code-arsenal"
+readonly ARSENAL_TARBALL_URL="$ARSENAL_REPO_URL/archive/refs/heads/main.tar.gz"
+
+# When piped in (curl | bash), BASH_SOURCE has no real file backing it, so the
+# script can't find its own sibling files (CLAUDE.md, .claude/, docs/, etc.).
+# Detect that case and self-bootstrap by fetching a full checkout, then re-run
+# the real installer from there.
+_self_path="${BASH_SOURCE[0]:-}"
+_script_dir=""
+if [[ -n "$_self_path" && -f "$_self_path" ]]; then
+  _script_dir="$(cd "$(dirname "$_self_path")/.." && pwd)"
+fi
+
+if [[ -z "$_script_dir" || ! -f "$_script_dir/CLAUDE.md" ]]; then
+  echo "→ No local Arsenal checkout found — fetching latest from $ARSENAL_REPO_URL..."
+  tmp_dir="$(mktemp -d)"
+  trap 'rm -rf "$tmp_dir"' EXIT
+
+  if command -v git > /dev/null 2>&1; then
+    git clone --depth 1 -q "$ARSENAL_REPO_URL.git" "$tmp_dir/arsenal"
+  elif command -v curl > /dev/null 2>&1 && command -v tar > /dev/null 2>&1; then
+    mkdir -p "$tmp_dir/arsenal"
+    curl -fsSL "$ARSENAL_TARBALL_URL" | tar xz -C "$tmp_dir/arsenal" --strip-components=1
+  else
+    echo "✗ Cannot bootstrap: need git, or curl+tar, to fetch Arsenal." >&2
+    exit 1
+  fi
+
+  if [[ ! -f "$tmp_dir/arsenal/scripts/install.sh" ]]; then
+    echo "✗ Bootstrap failed: fetched checkout is missing scripts/install.sh" >&2
+    exit 1
+  fi
+
+  bash "$tmp_dir/arsenal/scripts/install.sh" "$@"
+  exit $?
+fi
+
+readonly SCRIPT_DIR="$_script_dir"
 readonly ARSENAL_VERSION="1.0.0"
 
 # Colors

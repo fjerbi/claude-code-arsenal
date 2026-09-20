@@ -40,26 +40,33 @@
 curl -fsSL https://raw.githubusercontent.com/fjerbi/claude-code-arsenal/main/scripts/install.sh | bash -s -- /path/to/your/project
 ```
 
+**PowerShell (Windows):**
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/fjerbi/claude-code-arsenal/main/scripts/install.ps1))) -TargetPath "C:\path\to\your\project"
+```
+
+Both one-liners auto-fetch a full checkout to a temp directory and clean up after themselves — no manual clone needed.
+
 **Or clone & install manually:**
 
 ```bash
 git clone https://github.com/fjerbi/claude-code-arsenal.git
 cd claude-code-arsenal
-bash scripts/install.sh /path/to/your/project
-```
-
-**PowerShell (Windows):**
-
-```powershell
-git clone https://github.com/fjerbi/claude-code-arsenal.git
-cd claude-code-arsenal
-.\scripts\install.ps1 -TargetPath "C:\path\to\your\project"
+bash scripts/install.sh /path/to/your/project        # bash
+.\scripts\install.ps1 -TargetPath "C:\path\to\your\project"   # PowerShell
 ```
 
 ### Global Install
 
 ```bash
-bash scripts/install.sh --global
+# Bash — one-liner or from a local clone
+curl -fsSL https://raw.githubusercontent.com/fjerbi/claude-code-arsenal/main/scripts/install.sh | bash -s -- --global
+```
+
+```powershell
+# PowerShell — one-liner
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/fjerbi/claude-code-arsenal/main/scripts/install.ps1))) -Global
 ```
 
 This installs the core rules to your Claude Code user-level config so every project benefits from the operating system.

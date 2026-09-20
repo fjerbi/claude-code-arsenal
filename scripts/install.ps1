@@ -37,7 +37,63 @@ param(
 
 $ErrorActionPreference = "Stop"
 $ArsenalVersion = "1.0.0"
-$ScriptDir = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
+$ArsenalRepoUrl = "https://github.com/fjerbi/claude-code-arsenal"
+$ArsenalZipUrl = "$ArsenalRepoUrl/archive/refs/heads/main.zip"
+
+function Invoke-ArsenalBootstrap {
+    # When run via `irm | iex`, $MyInvocation.MyCommand.Path is empty, so the
+    # script can't find its own sibling files (CLAUDE.md, .claude/, docs/, etc.).
+    # Fetch a full checkout into a temp dir and re-run the real installer from there.
+    Write-Host "[>] No local Arsenal checkout found -- fetching latest from $ArsenalRepoUrl..." -ForegroundColor Blue
+
+    $tmpDir = Join-Path ([System.IO.Path]::GetTempPath()) ("arsenal-" + [System.Guid]::NewGuid().ToString("N"))
+    New-Item -ItemType Directory -Path $tmpDir -Force | Out-Null
+
+    try {
+        $repoDir = $null
+
+        if (Get-Command git -ErrorAction SilentlyContinue) {
+            git clone --depth 1 -q "$ArsenalRepoUrl.git" (Join-Path $tmpDir "arsenal") 2>$null
+            if ($LASTEXITCODE -eq 0) { $repoDir = Join-Path $tmpDir "arsenal" }
+        }
+
+        if (-not $repoDir) {
+            $zipPath = Join-Path $tmpDir "arsenal.zip"
+            Invoke-WebRequest -Uri $ArsenalZipUrl -OutFile $zipPath -UseBasicParsing
+            Expand-Archive -Path $zipPath -DestinationPath $tmpDir -Force
+            $extracted = Get-ChildItem -Path $tmpDir -Directory | Where-Object { $_.Name -like "claude-code-arsenal-*" } | Select-Object -First 1
+            if ($extracted) { $repoDir = $extracted.FullName }
+        }
+
+        if (-not $repoDir -or -not (Test-Path (Join-Path $repoDir "scripts\install.ps1"))) {
+            Write-Host "[x] Bootstrap failed: could not fetch Arsenal." -ForegroundColor Red
+            exit 1
+        }
+
+        $forward = @{}
+        if ($TargetPath) { $forward['TargetPath'] = $TargetPath }
+        if ($Global)      { $forward['Global'] = $true }
+        if ($Force)       { $forward['Force'] = $true }
+        if ($NoHooks)     { $forward['NoHooks'] = $true }
+
+        & (Join-Path $repoDir "scripts\install.ps1") @forward
+        exit $LASTEXITCODE
+    } finally {
+        Remove-Item -Path $tmpDir -Recurse -Force -ErrorAction SilentlyContinue
+    }
+}
+
+$SelfPath = $MyInvocation.MyCommand.Path
+$ScriptDir = $null
+if ($SelfPath) {
+    $candidateDir = Split-Path -Parent (Split-Path -Parent $SelfPath)
+    if (Test-Path (Join-Path $candidateDir "CLAUDE.md")) {
+        $ScriptDir = $candidateDir
+    }
+}
+if (-not $ScriptDir) {
+    Invoke-ArsenalBootstrap
+}
 
 function Write-Header {
     Write-Host ""
