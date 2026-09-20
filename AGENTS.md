@@ -275,6 +275,8 @@ Keep it concise. One paragraph, not a document.
 
 ## 15. Agent Roles
 
+Each role below is a registered subagent (`.claude/agents/<role>.md`, lowercase name) invokable via the Task tool with `subagent_type: "<role>"`. Each subagent file pins its own `tools` and `model` — read-only roles (researcher, validator) run on a fast/cheap model, others on the main model. Dispatch a subagent only when CLAUDE.md §13 justifies it (independent workstream, large task, real parallelism); for TRIVIAL/NORMAL work, do the task directly instead of paying the dispatch overhead.
+
 ### Orchestrator
 - **Job:** Coordinate multi-agent execution. Assign, sequence, validate, stop.
 - **Inputs:** User objective, complexity classification.

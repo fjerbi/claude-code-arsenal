@@ -157,6 +157,34 @@ validate_target() {
   check_file "$target/docs/handoff.md"         "handoff doc"
   check_file "$target/docs/preflight.md"       "preflight doc"
 
+  # --- Automation & Token Scripts ---
+  section "Automation & Token Tools"
+  if [[ -f "$target/CLAUDE_COMPACT.md" ]]; then
+    pass "CLAUDE_COMPACT.md rules"
+  else
+    warn "CLAUDE_COMPACT.md — optional, token-optimized rules not found"
+  fi
+  if [[ -f "$target/scripts/log-filter.sh" ]]; then
+    pass "log-filter.sh script"
+  else
+    warn "log-filter.sh — log filtering script not found"
+  fi
+  if [[ -f "$target/scripts/fast-check.sh" ]]; then
+    pass "fast-check.sh script"
+  else
+    warn "fast-check.sh — fast check script not found"
+  fi
+  if [[ -f "$target/scripts/arsenal.sh" ]]; then
+    pass "arsenal.sh CLI tool"
+  else
+    warn "arsenal.sh — unified CLI tool not found"
+  fi
+  if [[ -f "$target/scripts/validate.ps1" ]]; then
+    pass "validate.ps1 script"
+  else
+    warn "validate.ps1 — PowerShell validator not found"
+  fi
+
   # --- Cross-References ---
   section "Cross-References"
   check_xref "$target/CLAUDE.md" "AGENTS.md"      "CLAUDE.md → AGENTS.md"
@@ -171,6 +199,11 @@ validate_target() {
     if [[ -f "$agent_file" ]]; then
       check_contains "$agent_file" "Contract"   "${agent} has contract"
       check_contains "$agent_file" "Guardrails" "${agent} has guardrails"
+      if head -n 1 "$agent_file" | grep -q "^---$"; then
+        pass "${agent} has subagent frontmatter"
+      else
+        fail "${agent} missing frontmatter — not registered as a Task-invokable subagent"
+      fi
     fi
   done
 

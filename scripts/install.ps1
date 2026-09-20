@@ -90,12 +90,16 @@ function Install-Project {
     Write-Info "Installing Arsenal into: $Target"
     Write-Host ""
 
-    # CLAUDE.md
+    # CLAUDE.md & CLAUDE_COMPACT.md
     $claudeMd = Join-Path $Target "CLAUDE.md"
     if ((Test-Path $claudeMd) -and -not $ForceOverwrite) {
         Backup-ArsenalFile $claudeMd
     }
     Install-ArsenalFile (Join-Path $ScriptDir "CLAUDE.md") $claudeMd
+    $compactMd = Join-Path $ScriptDir "CLAUDE_COMPACT.md"
+    if (Test-Path $compactMd) {
+        Install-ArsenalFile $compactMd (Join-Path $Target "CLAUDE_COMPACT.md")
+    }
 
     # AGENTS.md
     $agentsMd = Join-Path $Target "AGENTS.md"
@@ -129,6 +133,12 @@ function Install-Project {
         }
     } else {
         Write-Warn "Skipping hooks (-NoHooks)"
+    }
+
+    # Automation Scripts
+    Write-Info "Installing automation scripts..."
+    Get-ChildItem (Join-Path $ScriptDir "scripts\*.*") | ForEach-Object {
+        Install-ArsenalFile $_.FullName (Join-Path $Target "scripts\$($_.Name)")
     }
 
     # Templates

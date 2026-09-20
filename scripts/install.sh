@@ -116,11 +116,14 @@ install_project() {
   print_info "Installing Arsenal into: $target"
   echo ""
 
-  # CLAUDE.md — back up if exists (unless --force)
+  # CLAUDE.md & CLAUDE_COMPACT.md — back up if exists (unless --force)
   if [[ -f "$target/CLAUDE.md" && "$force" != "true" ]]; then
     backup_file "$target/CLAUDE.md"
   fi
   install_file "$SCRIPT_DIR/CLAUDE.md" "$target/CLAUDE.md"
+  if [[ -f "$SCRIPT_DIR/CLAUDE_COMPACT.md" ]]; then
+    install_file "$SCRIPT_DIR/CLAUDE_COMPACT.md" "$target/CLAUDE_COMPACT.md"
+  fi
 
   # AGENTS.md
   if [[ -f "$target/AGENTS.md" && "$force" != "true" ]]; then
@@ -152,9 +155,36 @@ install_project() {
       install_file "$hook" "$target/.claude/hooks/$(basename "$hook")"
       chmod +x "$target/.claude/hooks/$(basename "$hook")"
     done
+
+    # Auto-wire git hooks if .git directory exists
+    if [[ -d "$target/.git" ]]; then
+      print_info "Wiring Git hooks into $target/.git/hooks/..."
+      mkdir -p "$target/.git/hooks"
+      if [[ -f "$target/.claude/hooks/pre-commit.sh" ]]; then
+        cp "$target/.claude/hooks/pre-commit.sh" "$target/.git/hooks/pre-commit"
+        chmod +x "$target/.git/hooks/pre-commit"
+        print_success "Auto-wired Git pre-commit hook"
+      fi
+      if [[ -f "$target/.claude/hooks/pre-push.sh" ]]; then
+        cp "$target/.claude/hooks/pre-push.sh" "$target/.git/hooks/pre-push"
+        chmod +x "$target/.git/hooks/pre-push"
+        print_success "Auto-wired Git pre-push hook"
+      fi
+    fi
   else
     print_warning "Skipping hooks (--no-hooks)"
   fi
+
+  # Scripts
+  print_info "Installing automation scripts..."
+  for scr in "$SCRIPT_DIR"/scripts/*.sh "$SCRIPT_DIR"/scripts/*.ps1; do
+    if [[ -f "$scr" ]]; then
+      install_file "$scr" "$target/scripts/$(basename "$scr")"
+      if [[ "$scr" == *.sh ]]; then
+        chmod +x "$target/scripts/$(basename "$scr")"
+      fi
+    fi
+  done
 
   # Templates
   print_info "Installing templates..."
