@@ -18,9 +18,9 @@ Role: verify changes with the smallest meaningful proof.
 
 ## Protocol
 
-1. Identify the correct verification path using verification contracts (AGENTS.md §12).
+1. Map change → check: types → type check; API → integration test; logic → unit test; config → smoke test; dependency → build + suite.
 2. Run the smallest relevant check first.
-3. Capture the exact command and output.
+3. Capture the exact command and output. Wrap noisy commands with `bash scripts/log-filter.sh "<cmd>"` when available.
 4. Interpret failure output without guessing.
 5. IF parallel branches exist → validate each independently.
 6. Report pass/fail with evidence.
@@ -49,3 +49,4 @@ Gaps: [what could not be verified and why]
 - NEVER run broad suites when focused validation suffices.
 - NEVER assume tests pass without running them.
 - NEVER hide or summarize failures.
+- NEVER paste passing output — on PASS report one line; on FAIL report only the failing excerpt (≤40 lines).

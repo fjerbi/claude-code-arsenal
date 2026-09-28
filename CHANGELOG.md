@@ -4,6 +4,25 @@ All notable changes to Claude Code Arsenal will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+- Claude Code hooks wired in `.claude/settings.json`: `guard-bash.sh` (PreToolUse — blocks destructive commands), `verify-files.sh` (PostToolUse + Stop — automatic syntax/merge-marker checks fed back to Claude), `session-context.sh` (SessionStart — auto-resume from `progress.md`)
+- `/auto` command — main-thread pipeline: triage → route → delegate noisy work to cheap subagents → verify → stop
+- `scripts/test-hooks.sh` hook smoke tests (`arsenal test-hooks`, CI step)
+- `--compact` / `-Compact` installer flag — installs `CLAUDE_COMPACT.md` as `CLAUDE.md`
+
+### Changed
+- All commands have frontmatter (`description`, `argument-hint`) and `$ARGUMENTS`, so Claude can select them and they accept task input
+- Agents and commands inline the rules they need instead of referencing `AGENTS.md` sections; researcher/validator reports are size-capped
+- `orchestrator` is documented as main-thread only (`claude --agent orchestrator`) — subagents cannot spawn subagents
+- Installers always install Claude Code hooks; `--no-hooks` now only skips git-hook wiring
+
+### Fixed
+- `settings.json` deny rules used an unrecognized `Bash:cmd` syntax and were never enforced; now `Bash(cmd:*)`, backed by the guard hook
+- Removed non-existent settings keys `preferredEditor` and `autoApprove`
+- `log-filter.sh "npm test"` (single quoted command, as documented) failed with "command not found"
+
 ## [1.0.0] — 2025-09-19
 
 ### Added

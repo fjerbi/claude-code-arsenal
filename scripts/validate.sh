@@ -122,11 +122,15 @@ validate_target() {
   check_file "$target/.claude/commands/review-architecture.md" "review-architecture command"
   check_file "$target/.claude/commands/safety-review.md"    "safety-review command"
   check_file "$target/.claude/commands/quality-gate.md"     "quality-gate command"
+  check_file "$target/.claude/commands/auto.md"             "auto command"
 
   # --- Hooks ---
   section "Hooks"
   check_dir  "$target/.claude/hooks"               ".claude/hooks/"
   check_file "$target/.claude/hooks/pre-commit.sh" "pre-commit hook"
+  check_file "$target/.claude/hooks/guard-bash.sh"      "guard-bash hook (Claude Code)"
+  check_file "$target/.claude/hooks/verify-files.sh"    "verify-files hook (Claude Code)"
+  check_file "$target/.claude/hooks/session-context.sh" "session-context hook (Claude Code)"
 
   # Optional hooks (warn if missing, don't fail)
   if [[ -f "$target/.claude/hooks/pre-push.sh" ]]; then
@@ -223,7 +227,8 @@ validate_target() {
   check_contains "$target/.claude/settings.json" "rm -rf"        "Denies rm -rf /"
   check_contains "$target/.claude/settings.json" "sudo"          "Denies sudo"
   check_contains "$target/.claude/settings.json" "force"         "Denies force push"
-  check_contains "$target/.claude/settings.json" "autoApprove"   "Has autoApprove setting"
+  check_contains "$target/.claude/settings.json" "guard-bash.sh"   "Bash guard hook wired"
+  check_contains "$target/.claude/settings.json" "verify-files.sh" "Verify hook wired"
 
   # --- Results ---
   printf '\n%b═══════════════════════════════════════════════%b\n' "$BLUE" "$NC"

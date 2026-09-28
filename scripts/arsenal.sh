@@ -19,6 +19,7 @@ Commands:
   validate [target]  Run full validation on an Arsenal installation
   check [target]     Run instant sub-second local pre-flight checks
   filter <command>   Run command with output log filtering to save tokens
+  test-hooks [target] Smoke-test the Claude Code hooks (guard, verify, session)
   help               Display this help message
 
 Examples:
@@ -43,6 +44,9 @@ case "$COMMAND" in
     ;;
   filter)
     bash "$SCRIPT_DIR/log-filter.sh" "$@"
+    ;;
+  test-hooks)
+    bash "$SCRIPT_DIR/test-hooks.sh" "$@"
     ;;
   help|--help|-h)
     show_usage

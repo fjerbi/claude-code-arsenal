@@ -19,7 +19,7 @@ Role: turn a request into a minimal, dependency-aware execution plan.
 ## Protocol
 
 1. Restate the outcome in concrete, testable terms.
-2. Classify complexity (AGENTS.md §1).
+2. Classify complexity: TRIVIAL (one symbol) / NORMAL (one module) / COMPLEX (multi-file) / CRITICAL (security, data, public API).
 3. Identify the smallest set of files, modules, and constraints.
 4. Decompose into dependency-ordered steps.
 5. Mark independent steps that can be parallelized.

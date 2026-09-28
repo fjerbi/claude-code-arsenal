@@ -16,7 +16,11 @@
     Overwrite existing CLAUDE.md without backup.
 
 .PARAMETER NoHooks
-    Skip installing git hooks.
+    Skip wiring git hooks. Kept for compatibility: this installer never wires git hooks,
+    and Claude Code hooks are always installed because .claude\settings.json references them.
+
+.PARAMETER Compact
+    Install the token-optimized CLAUDE_COMPACT.md as CLAUDE.md.
 
 .EXAMPLE
     .\scripts\install.ps1 -TargetPath "C:\Projects\my-app"
@@ -32,7 +36,8 @@ param(
 
     [switch]$Global,
     [switch]$Force,
-    [switch]$NoHooks
+    [switch]$NoHooks,
+    [switch]$Compact
 )
 
 $ErrorActionPreference = "Stop"
@@ -75,6 +80,7 @@ function Invoke-ArsenalBootstrap {
         if ($Global)      { $forward['Global'] = $true }
         if ($Force)       { $forward['Force'] = $true }
         if ($NoHooks)     { $forward['NoHooks'] = $true }
+        if ($Compact)     { $forward['Compact'] = $true }
 
         & (Join-Path $repoDir "scripts\install.ps1") @forward
         exit $LASTEXITCODE
@@ -135,7 +141,8 @@ function Install-Project {
     param(
         [string]$Target,
         [bool]$ForceOverwrite,
-        [bool]$SkipHooks
+        [bool]$SkipHooks,
+        [bool]$UseCompact
     )
 
     if (-not (Test-Path $Target -PathType Container)) {
@@ -151,7 +158,12 @@ function Install-Project {
     if ((Test-Path $claudeMd) -and -not $ForceOverwrite) {
         Backup-ArsenalFile $claudeMd
     }
-    Install-ArsenalFile (Join-Path $ScriptDir "CLAUDE.md") $claudeMd
+    if ($UseCompact) {
+        Install-ArsenalFile (Join-Path $ScriptDir "CLAUDE_COMPACT.md") $claudeMd
+        Write-Info "Installed compact rules as CLAUDE.md (-Compact)"
+    } else {
+        Install-ArsenalFile (Join-Path $ScriptDir "CLAUDE.md") $claudeMd
+    }
     $compactMd = Join-Path $ScriptDir "CLAUDE_COMPACT.md"
     if (Test-Path $compactMd) {
         Install-ArsenalFile $compactMd (Join-Path $Target "CLAUDE_COMPACT.md")
@@ -181,14 +193,10 @@ function Install-Project {
         Install-ArsenalFile $_.FullName (Join-Path $Target ".claude\commands\$($_.Name)")
     }
 
-    # Hooks
-    if (-not $SkipHooks) {
-        Write-Info "Installing hooks..."
-        Get-ChildItem (Join-Path $ScriptDir ".claude\hooks\*.sh") | ForEach-Object {
-            Install-ArsenalFile $_.FullName (Join-Path $Target ".claude\hooks\$($_.Name)")
-        }
-    } else {
-        Write-Warn "Skipping hooks (-NoHooks)"
+    # Hooks - always installed: .claude\settings.json references the Claude Code hooks.
+    Write-Info "Installing hooks..."
+    Get-ChildItem (Join-Path $ScriptDir ".claude\hooks\*.sh") | ForEach-Object {
+        Install-ArsenalFile $_.FullName (Join-Path $Target ".claude\hooks\$($_.Name)")
     }
 
     # Automation Scripts
@@ -254,7 +262,7 @@ Write-Header
 if ($Global) {
     Install-Global
 } elseif ($TargetPath) {
-    Install-Project -Target $TargetPath -ForceOverwrite $Force.IsPresent -SkipHooks $NoHooks.IsPresent
+    Install-Project -Target $TargetPath -ForceOverwrite $Force.IsPresent -SkipHooks $NoHooks.IsPresent -UseCompact $Compact.IsPresent
 } else {
     Write-Err "No target specified."
     Write-Host ""

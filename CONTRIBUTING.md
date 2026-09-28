@@ -28,9 +28,16 @@ Arsenal contributions must follow the same principles the system enforces:
 Commands live in `.claude/commands/` and must include:
 
 ```markdown
+---
+description: [when Claude should use this — this is what makes it selectable]
+argument-hint: <expected input>
+---
+
 # Command Name
 
 Goal: [one sentence]
+
+Task: $ARGUMENTS
 
 ## Trigger
 [When to run this command]
@@ -95,6 +102,7 @@ Hooks in `.claude/hooks/` must:
 - Fail safely (set -eu)
 - Produce clear output (pass/fail with context)
 - Not block workflows unnecessarily
+- Claude Code hooks (wired in `settings.json`): stay silent on success, exit 2 with a stderr message to block, avoid forks in hot paths (they run on every tool call), and add cases to `scripts/test-hooks.sh`
 
 ## Validation Requirements
 

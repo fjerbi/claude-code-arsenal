@@ -23,7 +23,7 @@ run_and_filter() {
   set -e
 
   if [[ $exit_code -eq 0 ]]; then
-    echo "✓ Command succeeded ($(basename "$1")). Log summary:"
+    echo "✓ Command succeeded. Log summary:"
     grep -i -E "(pass|passed|success|ok|completed)" "$temp_out" | tail -n 10 || echo "Done."
   else
     echo "✗ Command failed (exit code $exit_code). Filtered output:"
@@ -54,7 +54,10 @@ filter_stdin() {
   rm -f "$temp_out"
 }
 
-if [[ $# -gt 0 ]]; then
+if [[ $# -eq 1 && "$1" == *[[:space:]]* ]]; then
+  # Single quoted command string, e.g. "npm test" — run it through a shell.
+  run_and_filter bash -c "$1"
+elif [[ $# -gt 0 ]]; then
   run_and_filter "$@"
 elif [[ ! -t 0 ]]; then
   filter_stdin

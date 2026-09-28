@@ -97,6 +97,7 @@ Context is a finite resource. Protect it.
 - Do not repeat searches or failed commands without new evidence.
 - Do not use repository-wide exploration for local problems.
 - Do not spawn unnecessary subagents.
+- AGENTS.md is reference material: when a rule cites `AGENTS.md §N`, Grep for `^## N\.` and read only that section.
 
 Maintain a concise mental model: relevant files, root cause, current hypothesis, changes made, verification status.
 
@@ -141,6 +142,8 @@ Do not spawn subagents for simple bugs, single-file changes, straightforward sea
 
 Delegation must reduce total work, not increase it.
 
+Delegate *noisy* work so bulk output never enters the main context: broad searches → `researcher`, long test/build runs → `validator` (both on a cheap model, both return summaries only). For hands-off execution use `/auto <task>` — it triages, routes, and dispatches in one pass. Subagents cannot spawn subagents, so orchestration always happens in the main thread.
+
 ---
 
 ## 14. EDITING
@@ -162,6 +165,8 @@ Do not add dependencies unless necessary. Check existing dependencies and standa
 Verification is required whenever practical. Use the smallest verification that provides meaningful confidence.
 
 See AGENTS.md §12 (Verification Contracts) for the change-type → verification mapping.
+
+Hooks run automatically (see `.claude/settings.json`): every edited file is syntax-checked (shell, JSON, Python, JS) and scanned for merge markers, all changed files are re-checked before you stop, and destructive Bash commands are blocked. Do not spend tool calls duplicating these checks; act on hook feedback when it appears.
 
 Escalate verification only when: a targeted test fails, the change affects broad behavior, the task requires comprehensive testing, or the risk justifies it.
 

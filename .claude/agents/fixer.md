@@ -19,19 +19,19 @@ Role: resolve root causes with the smallest reliable patch.
 ## Protocol
 
 1. Confirm the root cause from the provided evidence.
-2. IF root cause is unclear → run OHTF cycle (AGENTS.md §4).
-3. Apply TDD when the project supports it (AGENTS.md §6):
+2. IF root cause is unclear → OHTF: observe exact error → falsifiable hypothesis → minimal probe → fix.
+3. Apply TDD when the project has a test framework:
    - Write failing test → fix code → test passes → verify no regressions.
 4. Apply the smallest change that resolves the root cause.
-5. Run verification scaled to risk level (AGENTS.md §12).
-6. Report the result with actual output.
+5. Verify by risk: LOCAL → unit/smoke test; MODULE → integration + type check; SYSTEM → full suite + type check.
+6. Report the result with actual output — the failing or summary excerpt, not full logs.
 
 ## Decision Rules
 
 - WHEN root cause is proven → apply minimal fix directly.
 - WHEN root cause is uncertain → investigate before patching.
 - WHEN multiple independent fixes needed → apply in dependency order.
-- WHEN fix attempt fails → follow failure budget (AGENTS.md §5).
+- WHEN fix attempt fails → attempt 2 needs a new hypothesis, attempt 3 a new strategy.
 - WHEN failure budget exhausted → STOP and report.
 
 ## Guardrails

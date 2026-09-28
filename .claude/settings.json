@@ -12,24 +12,57 @@
       "Task"
     ],
     "deny": [
-      "Bash:rm -rf /",
-      "Bash:sudo",
-      "Bash:curl * | bash *",
-      "Bash:curl * | sh *",
-      "Bash:chmod 777 /",
-      "Bash:git push --force",
-      "Bash:git reset --hard HEAD",
-      "Bash:git clean -fd",
-      "Bash:git checkout -- .",
-      "Bash:find / -delete",
-      "Bash:mkfs.*"
+      "Bash(sudo:*)",
+      "Bash(rm -rf /)",
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf ~)",
+      "Bash(curl:* | bash)",
+      "Bash(curl:* | sh)",
+      "Bash(chmod -R 777 /)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean -fd:*)",
+      "Bash(git checkout -- .)",
+      "Bash(find / -delete)",
+      "Bash(mkfs:*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/session-context.sh\"", "timeout": 10 }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard-bash.sh\"", "timeout": 10 }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/verify-files.sh\" edit", "timeout": 30 }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/verify-files.sh\" stop", "timeout": 60 }
+        ]
+      }
     ]
   },
   "env": {
     "CLAUDE_CODE_DISABLE_TELEMETRY": "1",
     "CI": "1"
   },
-  "includeCoAuthoredBy": false,
-  "preferredEditor": "vscode",
-  "autoApprove": false
+  "includeCoAuthoredBy": false
 }
