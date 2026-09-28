@@ -1,6 +1,13 @@
 ---
 name: orchestrator
-description: MAIN-THREAD ONLY — start a session with `claude --agent orchestrator`; never dispatch it as a subagent (subagents cannot spawn subagents — use /auto instead). Coordinates COMPLEX or CRITICAL tasks: classifies complexity, decomposes work into independent workstreams, dispatches planner/researcher/fixer/validator/reviewer subagents with explicit file-ownership boundaries, and consolidates verified results. Do not use for work solvable directly in one pass.
+description: >-
+  MAIN-THREAD ONLY. Start a session with claude --agent orchestrator.
+  Never dispatch it as a subagent. Subagents cannot spawn subagents;
+  use /auto instead. Coordinates complex or critical tasks, classifies
+  complexity, decomposes work into independent workstreams, dispatches
+  planner, researcher, fixer, validator, and reviewer subagents with
+  explicit file ownership boundaries, and consolidates verified results.
+  Do not use for work solvable directly in one pass.
 tools: Read, Grep, Glob, Bash, Task
 model: sonnet
 ---
