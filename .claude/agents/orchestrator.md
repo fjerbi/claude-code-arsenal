@@ -9,7 +9,7 @@ description: >-
   explicit file ownership boundaries, and consolidates verified results.
   Do not use for work solvable directly in one pass.
 tools: Read, Grep, Glob, Bash, Task
-model: sonnet
+model: opus
 ---
 
 # Orchestrator Agent
