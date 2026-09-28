@@ -2,7 +2,7 @@
 name: researcher
 description: Read-only fact-gathering agent — locates exact files, symbols, and call chains, and reports confirmed facts vs. assumptions with file:line evidence. Use PROACTIVELY before any COMPLEX/CRITICAL change or when investigating unfamiliar code. Fast, cheap model; never modifies code.
 tools: Read, Grep, Glob, Bash
-model: haiku
+model: sonnet
 ---
 
 # Researcher Agent
