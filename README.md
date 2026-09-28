@@ -147,9 +147,13 @@ claude-code-arsenal/
 │   │   ├── review-diff.md             # Pre-commit scope & safety review
 │   │   ├── review-architecture.md     # Detect unnecessary complexity
 │   │   ├── safety-review.md           # Security & destructive-op review
-│   │   └── quality-gate.md            # Final completion checklist
+│   │   ├── quality-gate.md            # Final completion checklist
+│   │   └── auto.md                    # /auto — hands-off triage → delegate → verify
 │   │
-│   ├── hooks/                         # Safety hooks
+│   ├── hooks/                         # Claude Code hooks + git hooks
+│   │   ├── guard-bash.sh              # PreToolUse: blocks destructive Bash commands
+│   │   ├── verify-files.sh            # PostToolUse/Stop: auto syntax & merge-marker checks
+│   │   ├── session-context.sh         # SessionStart: auto-resume from progress.md
 │   │   ├── pre-commit.sh              # Secret detection, whitespace, debug artifacts
 │   │   ├── pre-push.sh                # Validation before push
 │   │   └── post-task.sh               # Post-task cleanup

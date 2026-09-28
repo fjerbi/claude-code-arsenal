@@ -96,7 +96,7 @@ function Invoke-ValidateTarget {
     Write-Section "Commands"
     Check-Dir (Join-Path $Target ".claude\commands") ".claude/commands/"
     foreach ($cmd in @("triage-task", "plan-task", "fix-bug", "implement-feature", "debug-root-cause",
-                        "validate-change", "review-diff", "review-architecture", "safety-review", "quality-gate")) {
+                        "validate-change", "review-diff", "review-architecture", "safety-review", "quality-gate", "auto")) {
         Check-File (Join-Path $Target ".claude\commands\$cmd.md") "$cmd command"
     }
 
@@ -104,6 +104,9 @@ function Invoke-ValidateTarget {
     Write-Section "Hooks"
     Check-Dir (Join-Path $Target ".claude\hooks") ".claude/hooks/"
     Check-File (Join-Path $Target ".claude\hooks\pre-commit.sh") "pre-commit hook"
+    Check-File (Join-Path $Target ".claude\hooks\guard-bash.sh") "guard-bash hook (Claude Code)"
+    Check-File (Join-Path $Target ".claude\hooks\verify-files.sh") "verify-files hook (Claude Code)"
+    Check-File (Join-Path $Target ".claude\hooks\session-context.sh") "session-context hook (Claude Code)"
 
     if (Test-Path (Join-Path $Target ".claude\hooks\pre-push.sh")) {
         Test-Pass "pre-push hook"
@@ -196,7 +199,8 @@ function Invoke-ValidateTarget {
     Check-Contains $settingsFile "rm -rf"      "Denies rm -rf /"
     Check-Contains $settingsFile "sudo"        "Denies sudo"
     Check-Contains $settingsFile "force"       "Denies force push"
-    Check-Contains $settingsFile "autoApprove" "Has autoApprove setting"
+    Check-Contains $settingsFile "guard-bash.sh"   "Bash guard hook wired"
+    Check-Contains $settingsFile "verify-files.sh" "Verify hook wired"
 
     # --- Results ---
     Write-Host ""

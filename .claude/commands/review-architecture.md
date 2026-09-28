@@ -1,6 +1,13 @@
+---
+description: Check a change for unjustified abstractions, disproportionate complexity, and convention drift; ACCEPT/REVISE/BLOCK.
+argument-hint: [files or area to review]
+---
+
 # Review Architecture
 
 Goal: detect unnecessary complexity and risky design.
+
+Scope: $ARGUMENTS
 
 ## Trigger
 

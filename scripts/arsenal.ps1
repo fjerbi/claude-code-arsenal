@@ -29,8 +29,12 @@ switch ($Command.ToLower()) {
     "filter" {
         & "$scriptDir\log-filter.ps1" -Command $Target
     }
+    "test-hooks" {
+        # Claude Code hooks are bash scripts (Claude Code on Windows runs them via Git Bash).
+        & bash "$scriptDir/test-hooks.sh" $Target
+    }
     default {
         Write-Host "Claude Code Arsenal CLI Tool (PowerShell)" -ForegroundColor Cyan
-        Write-Host "Commands: install, check, validate, filter, help"
+        Write-Host "Commands: install, check, validate, filter, test-hooks, help"
     }
 }

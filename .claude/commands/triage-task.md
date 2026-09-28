@@ -1,18 +1,25 @@
+---
+description: Classify a task (complexity, type, risk, scope) and decide the smallest safe next action before any edit.
+argument-hint: <task description>
+---
+
 # Triage Task
 
 Goal: classify and scope a task before execution.
 
+Task: $ARGUMENTS
+
 ## Trigger
 
-Run BEFORE any implementation work begins.
+Run BEFORE implementation work when scope or risk is unclear. For hands-off execution use `/auto`, which triages itself.
 
 ## Protocol
 
 1. Restate the objective in one sentence.
-2. Classify complexity: TRIVIAL / NORMAL / COMPLEX / CRITICAL (AGENTS.md §1).
-3. Identify relevant files, modules, or systems.
-4. Classify change type: bug fix, feature, refactor, investigation.
-5. Assess risk and blast radius (AGENTS.md §7).
+2. Complexity: TRIVIAL (one symbol/typo) / NORMAL (scoped fix, one module) / COMPLEX (multi-file, cross-module) / CRITICAL (security, data, public API). Unsure → NORMAL.
+3. Identify relevant files, modules, or systems (targeted search only).
+4. Change type: bug fix, feature, refactor, investigation.
+5. Risk: LOCAL / MODULE / SYSTEM.
 6. List constraints, unknowns, and assumptions.
 7. Determine the smallest safe next action.
 

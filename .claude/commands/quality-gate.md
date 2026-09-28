@@ -1,10 +1,14 @@
+---
+description: Final completion checklist — decide whether the task is verifiably done and safe to stop.
+---
+
 # Quality Gate
 
 Goal: determine whether a task is ready to stop.
 
 ## Trigger
 
-Run BEFORE declaring any task complete.
+Run BEFORE declaring a task complete.
 
 ## Protocol
 

@@ -82,7 +82,8 @@ Options:
   <target-path>   Path to the project root where Arsenal will be installed.
   --global        Install to Claude Code user-level config (~/.claude/).
   --force         Overwrite existing CLAUDE.md without backup.
-  --no-hooks      Skip installing git hooks.
+  --no-hooks      Skip wiring git hooks (Claude Code hooks are always installed).
+  --compact       Install the token-optimized CLAUDE_COMPACT.md as CLAUDE.md.
   --help          Show this help message.
 
 What gets installed:
@@ -90,10 +91,10 @@ What gets installed:
     CLAUDE.md               Core operating instructions
     AGENTS.md               Multi-agent execution model
     .claude/constitution.md Immutable principles
-    .claude/settings.json   Project settings & safety deny-list
+    .claude/settings.json   Project settings, deny-list & Claude Code hooks
     .claude/agents/         Specialized agent definitions (6 agents)
-    .claude/commands/       Workflow commands (10 commands)
-    .claude/hooks/          Safety hooks (3 hooks)
+    .claude/commands/       Workflow commands (11 commands, incl. /auto)
+    .claude/hooks/          Claude Code hooks (guard, verify, session) + git hooks
     .claude/templates/      Reusable templates (4 templates)
     docs/                   Extended documentation (8 docs)
 
@@ -144,6 +145,7 @@ install_project() {
   local target="$1"
   local force="${2:-false}"
   local no_hooks="${3:-false}"
+  local compact="${4:-false}"
 
   if [[ ! -d "$target" ]]; then
     print_error "Target directory does not exist: $target"
@@ -157,7 +159,12 @@ install_project() {
   if [[ -f "$target/CLAUDE.md" && "$force" != "true" ]]; then
     backup_file "$target/CLAUDE.md"
   fi
-  install_file "$SCRIPT_DIR/CLAUDE.md" "$target/CLAUDE.md"
+  if [[ "$compact" == "true" ]]; then
+    install_file "$SCRIPT_DIR/CLAUDE_COMPACT.md" "$target/CLAUDE.md"
+    print_info "Installed compact rules as CLAUDE.md (--compact)"
+  else
+    install_file "$SCRIPT_DIR/CLAUDE.md" "$target/CLAUDE.md"
+  fi
   if [[ -f "$SCRIPT_DIR/CLAUDE_COMPACT.md" ]]; then
     install_file "$SCRIPT_DIR/CLAUDE_COMPACT.md" "$target/CLAUDE_COMPACT.md"
   fi
@@ -185,14 +192,14 @@ install_project() {
     install_file "$cmd" "$target/.claude/commands/$(basename "$cmd")"
   done
 
-  # Hooks
-  if [[ "$no_hooks" != "true" ]]; then
-    print_info "Installing hooks..."
-    for hook in "$SCRIPT_DIR"/.claude/hooks/*.sh; do
-      install_file "$hook" "$target/.claude/hooks/$(basename "$hook")"
-      chmod +x "$target/.claude/hooks/$(basename "$hook")"
-    done
+  # Hooks — always installed: .claude/settings.json references the Claude Code hooks.
+  print_info "Installing hooks..."
+  for hook in "$SCRIPT_DIR"/.claude/hooks/*.sh; do
+    install_file "$hook" "$target/.claude/hooks/$(basename "$hook")"
+    chmod +x "$target/.claude/hooks/$(basename "$hook")"
+  done
 
+  if [[ "$no_hooks" != "true" ]]; then
     # Auto-wire git hooks if .git directory exists
     if [[ -d "$target/.git" ]]; then
       print_info "Wiring Git hooks into $target/.git/hooks/..."
@@ -209,7 +216,7 @@ install_project() {
       fi
     fi
   else
-    print_warning "Skipping hooks (--no-hooks)"
+    print_warning "Skipping git hook wiring (--no-hooks)"
   fi
 
   # Scripts
@@ -275,6 +282,7 @@ print_header
 FORCE=false
 GLOBAL=false
 NO_HOOKS=false
+COMPACT=false
 TARGET=""
 
 for arg in "$@"; do
@@ -292,6 +300,9 @@ for arg in "$@"; do
     --no-hooks)
       NO_HOOKS=true
       ;;
+    --compact)
+      COMPACT=true
+      ;;
     *)
       TARGET="$arg"
       ;;
@@ -301,7 +312,7 @@ done
 if [[ "$GLOBAL" == "true" ]]; then
   install_global
 elif [[ -n "$TARGET" ]]; then
-  install_project "$TARGET" "$FORCE" "$NO_HOOKS"
+  install_project "$TARGET" "$FORCE" "$NO_HOOKS" "$COMPACT"
 else
   print_error "No target specified."
   echo ""

@@ -51,3 +51,4 @@ Parallelism safe: [yes/no and why]
 - NEVER speculate beyond the task boundary.
 - NEVER do a broad repo survey when a targeted search suffices.
 - NEVER claim confidence without repository-backed evidence.
+- NEVER paste file contents — report file:line facts only; keep the report under ~40 lines.

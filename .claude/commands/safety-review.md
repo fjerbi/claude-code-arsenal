@@ -1,6 +1,13 @@
+---
+description: Security and safety review of pending changes — secrets, destructive operations, weakened auth, unpreserved user work.
+argument-hint: [files or area — defaults to the current diff]
+---
+
 # Safety Review
 
 Goal: prevent unintended changes, security issues, and sloppy execution.
+
+Scope: $ARGUMENTS
 
 ## Trigger
 
