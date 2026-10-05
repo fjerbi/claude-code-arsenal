@@ -26,8 +26,8 @@ Run for any task you want executed hands-off. This command is the orchestrator �
 | CRITICAL | COMPLEX pipeline + `reviewer`. Show the plan and wait for user approval before any edit. |
 
 3. **Delegate by cost, not habit.** Dispatch a subagent only when it keeps bulk output out of the main context:
-   - Search across many files or unknown locations → `researcher` (Haiku). Ask for file:line facts only.
-   - Test/build runs with long output → `validator` (Haiku). Ask for PASS/FAIL + the failing excerpt only.
+   - Search across many files or unknown locations → `researcher` (Sonnet). Ask for file:line facts only.
+   - Test/build runs with long output → `validator` (Sonnet). Ask for PASS/FAIL + the failing excerpt only.
    - Anything answerable with 1–3 targeted Grep/Read calls → do it inline.
 4. **Brief subagents completely** — they start cold. Give: objective, files/symbols already known, owned files (parallel fixers must not overlap), expected output format, and "do not re-derive what is given".
 5. **Launch independent subagents in one message** so they run in parallel.
