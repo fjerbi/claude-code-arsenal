@@ -137,6 +137,13 @@ update_project() {
   done
   echo ""
 
+  # Update skills — directories (SKILL.md + references/), copied recursively
+  print_info "Updating skills..."
+  while IFS= read -r -d '' f; do
+    update_file "$f" "$target/.claude/skills/${f#"$SCRIPT_DIR/.claude/skills/"}"
+  done < <(find "$SCRIPT_DIR/.claude/skills" -type f -print0 2>/dev/null)
+  echo ""
+
   # Update hooks
   print_info "Updating hooks..."
   for hook in "$SCRIPT_DIR"/.claude/hooks/*.sh; do

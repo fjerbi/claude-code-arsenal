@@ -193,6 +193,16 @@ function Install-Project {
         Install-ArsenalFile $_.FullName (Join-Path $Target ".claude\commands\$($_.Name)")
     }
 
+    # Skills - directories (SKILL.md + references\), copied recursively
+    Write-Info "Installing skills..."
+    $skillsDir = Join-Path $ScriptDir ".claude\skills"
+    if (Test-Path $skillsDir) {
+        Get-ChildItem $skillsDir -Recurse -File | ForEach-Object {
+            $rel = $_.FullName.Substring($skillsDir.Length + 1)
+            Install-ArsenalFile $_.FullName (Join-Path $Target ".claude\skills\$rel")
+        }
+    }
+
     # Hooks - always installed: .claude\settings.json references the Claude Code hooks.
     Write-Info "Installing hooks..."
     Get-ChildItem (Join-Path $ScriptDir ".claude\hooks\*.sh") | ForEach-Object {

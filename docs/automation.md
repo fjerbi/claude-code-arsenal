@@ -81,8 +81,8 @@ Each role in `.claude/agents/*.md` is a registered subagent with `model` and `to
 
 | Subagent Role | Model | Tools | Reason |
 |---|---|---|---|
-| **Researcher** | Haiku | Read, Grep, Glob, Bash | Fast symbol grep and indexing; read-only |
-| **Validator** | Haiku | Read, Bash, Grep, Glob | Log checking and unit test verification; read-only |
+| **Researcher** | Sonnet | Read, Grep, Glob, Bash | Fast symbol grep and indexing; read-only |
+| **Validator** | Sonnet | Read, Bash, Grep, Glob | Log checking and unit test verification; read-only |
 | **Planner** | Sonnet | Read, Grep, Glob | Dependency-ordered plans; read-only |
 | **Reviewer** | Sonnet | Read, Grep, Glob, Bash | Diff review against objective; read-only |
 | **Fixer** | Sonnet | Read, Edit, MultiEdit, Write, Bash, Grep, Glob | Multi-file reasoning, applies patches |

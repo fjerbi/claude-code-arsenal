@@ -94,6 +94,7 @@ What gets installed:
     .claude/settings.json   Project settings, deny-list & Claude Code hooks
     .claude/agents/         Specialized agent definitions (6 agents)
     .claude/commands/       Workflow commands (11 commands, incl. /auto)
+    .claude/skills/         Version-aware framework skills (Next.js)
     .claude/hooks/          Claude Code hooks (guard, verify, session) + git hooks
     .claude/templates/      Reusable templates (4 templates)
     docs/                   Extended documentation (8 docs)
@@ -191,6 +192,12 @@ install_project() {
   for cmd in "$SCRIPT_DIR"/.claude/commands/*.md; do
     install_file "$cmd" "$target/.claude/commands/$(basename "$cmd")"
   done
+
+  # Skills — directories (SKILL.md + references/), copied recursively
+  print_info "Installing skills..."
+  while IFS= read -r -d '' f; do
+    install_file "$f" "$target/.claude/skills/${f#"$SCRIPT_DIR/.claude/skills/"}"
+  done < <(find "$SCRIPT_DIR/.claude/skills" -type f -print0 2>/dev/null)
 
   # Hooks — always installed: .claude/settings.json references the Claude Code hooks.
   print_info "Installing hooks..."
