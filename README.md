@@ -150,6 +150,11 @@ claude-code-arsenal/
 │   │   ├── quality-gate.md            # Final completion checklist
 │   │   └── auto.md                    # /auto — hands-off triage → delegate → verify
 │   │
+│   ├── skills/                        # Version-aware framework skills (auto-triggered)
+│   │   └── nextjs/
+│   │       ├── SKILL.md               # Detect version → load one reference
+│   │       └── references/            # v14.md, v15.md, v16.md — per-major deltas
+│   │
 │   ├── hooks/                         # Claude Code hooks + git hooks
 │   │   ├── guard-bash.sh              # PreToolUse: blocks destructive Bash commands
 │   │   ├── verify-files.sh            # PostToolUse/Stop: auto syntax & merge-marker checks
@@ -219,6 +224,54 @@ Agents are specialized roles with strict contracts, boundaries, and guardrails.
 | **Fixer** | Resolves root causes with minimal patches | Modifies only assigned files |
 | **Validator** | Verifies changes with actual command output | Does not modify production code |
 | **Reviewer** | Reviews patches for correctness, scope, safety | Does not rewrite the implementation |
+
+---
+
+## Framework Skills
+
+Skills in `.claude/skills/` load automatically when the task matches. Each one is **version-aware**: it resolves the version the project actually runs (installed package first, then lockfile, then the declared range), then reads only that major version's reference — so a Next.js 14 project never gets Next.js 16 code. The SessionStart hook prints the detected stack (e.g. `[arsenal] stack: next@15.2.3 (app router), react@19.0.0`) so no tool call is needed. Unknown majors fall back to the official upgrade guide instead of guessing.
+
+Adding a framework: create `.claude/skills/<framework>/SKILL.md` + `references/v<major>.md`, then add the package to the detection loop in `.claude/hooks/session-context.sh`.
+
+### Roadmap
+
+**JavaScript / TypeScript**
+- [x] Next.js — 14, 15, 16
+- [ ] React (standalone / Vite)
+- [ ] React Native / Expo
+- [ ] Vue / Nuxt
+- [ ] Angular
+- [ ] SvelteKit
+- [ ] Astro
+- [ ] NestJS
+- [ ] Express / Fastify
+
+**Python**
+- [ ] Django
+- [ ] FastAPI
+- [ ] Flask
+
+**PHP**
+- [ ] Laravel
+
+**Java / Kotlin**
+- [ ] Spring Boot
+
+**C# / .NET**
+- [ ] ASP.NET Core
+- [ ] Unity
+
+**Go**
+- [ ] Go (stdlib, Gin)
+
+**Rust**
+- [ ] Rust (Axum, Tauri)
+
+**Ruby**
+- [ ] Ruby on Rails
+
+**Dart**
+- [ ] Flutter
 
 ---
 

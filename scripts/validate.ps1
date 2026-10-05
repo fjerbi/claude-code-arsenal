@@ -100,6 +100,10 @@ function Invoke-ValidateTarget {
         Check-File (Join-Path $Target ".claude\commands\$cmd.md") "$cmd command"
     }
 
+    # --- Skills ---
+    Write-Section "Skills"
+    Check-File (Join-Path $Target ".claude\skills\nextjs\SKILL.md") "nextjs skill"
+
     # --- Hooks ---
     Write-Section "Hooks"
     Check-Dir (Join-Path $Target ".claude\hooks") ".claude/hooks/"

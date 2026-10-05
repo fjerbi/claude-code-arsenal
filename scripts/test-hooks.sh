@@ -100,5 +100,21 @@ expect 0 "verify stop: clean changes"         verify-files.sh stop <<< '{"stop_h
 # --- session-context.sh ---
 expect 0 "session-context: runs"              session-context.sh <<< '{}'
 
+stack_expect() {  # stack_expect <label> <substring expected in hook output>
+  local out
+  out="$(CLAUDE_PROJECT_DIR="$WORK" bash "$HOOKS/session-context.sh" < /dev/null 2>&1)"
+  if [[ "$out" == *"$2"* ]]; then
+    PASS=$((PASS + 1))
+  else
+    FAIL=$((FAIL + 1))
+    echo "✗ $1 — expected '$2', got '$out'"
+  fi
+}
+mkdir -p "$WORK/node_modules/next" "$WORK/src/app"
+printf '{\n  "name": "next",\n  "version": "15.2.3"\n}\n' > "$WORK/node_modules/next/package.json"
+printf '{ "dependencies": { "next": "^15.0.0", "react": "^19.0.0" } }\n' > "$WORK/package.json"
+stack_expect "session-context: stack versions" "stack: next@15.2.3 (app router), react@^19.0.0 [declared only]"
+rm -rf "$WORK/node_modules" "$WORK/src" "$WORK/package.json"
+
 echo "Hook tests: $PASS passed, $FAIL failed"
 [[ $FAIL -eq 0 ]]

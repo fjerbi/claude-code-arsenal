@@ -124,6 +124,10 @@ validate_target() {
   check_file "$target/.claude/commands/quality-gate.md"     "quality-gate command"
   check_file "$target/.claude/commands/auto.md"             "auto command"
 
+  # --- Skills ---
+  section "Skills"
+  check_file "$target/.claude/skills/nextjs/SKILL.md"       "nextjs skill"
+
   # --- Hooks ---
   section "Hooks"
   check_dir  "$target/.claude/hooks"               ".claude/hooks/"
